@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from .models import Category,Product
 
 def home_page(request):
     return render(request,"home_page.html")
@@ -58,3 +59,44 @@ def register_page(request):
         return redirect(login_page)
     
     return render(request, "register.html")
+
+def add_product(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        category_id = request.POST.get('category')
+        descrition = request.POST.get('descrition')
+        image = request.FILES.get('image')
+        is_available = request.POST.get('is_available') == 'on'
+
+        try:
+            category_obj = Category.objects.get(id=category_id)
+        
+            Product.objects.create(
+                name=name,
+                price=price,
+                category=category_obj,
+                descrition=descrition,
+                image=image,
+                is_available=is_available,
+                owner = request.user,
+            )
+            messages.success(request, "Mahsulot muvaffaqiyatli qo'shildi!")
+            return redirect('product_list')
+            
+        except Category.DoesNotExist:
+            messages.error(request, "Xato: Bunday kategoriya mavjud emas!")
+            return redirect('add_product')
+
+    categories = Category.objects.all()
+    category = {
+        "categories":categories
+    }
+    return render(request, "add_product.html", category)
+
+def product_list(request):
+    products = Product.objects.all()
+    product = {
+        "products":products
+    }
+    return render(request, "products.html",product)
