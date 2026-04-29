@@ -15,6 +15,7 @@ class Product(models.Model):
     price = models.DecimalField(verbose_name = "product price", max_digits = 10,decimal_places = 2)
     descrition = models.TextField(null=True,blank= True)
     category = models.ForeignKey(to=Category,on_delete = models.PROTECT)
+    is_available = models.BooleanField
 
     def __str__(self):
         return self.name
