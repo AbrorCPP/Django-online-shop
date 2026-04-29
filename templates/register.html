@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {%  include "components/_navbar.html" %}
+{% extends "base.html" %}
+{% block content %}
+
 <form method = "POST" action = "/register/" class="container d-flex justify-content-center align-items-center pt-5" style="min-height: 300px;">
     {% csrf_token %}
     <div class="card p-4 shadow-sm w-100" style="max-width: 400px;">
@@ -40,5 +34,5 @@
         <a href="/login/"> already has an account !</a>
     </div>
 </form>
-</body>
-</html>
+
+{% endblock content %}

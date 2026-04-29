@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-
-    {%  include "components/_navbar.html" %}
-
+{% extends "base.html" %}
+{% block content %}
     {% if user.is_authenticated %}
     <div class="container mt-5">
     <div class="row justify-content-center">
@@ -80,5 +71,5 @@
 {% else %}
 <h3 class = "text-warning ml-5"> Login in order to add a product !</h3>
 {% endif %}
-</body>
-</html>
+
+{% endblock content %}

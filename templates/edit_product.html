@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">Mahsulotni tahrirlash: {{ product.name }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            {% if messages %}
+                            <div class="messages">
+                                {% for message in messages %}
+                                    <div class="font-weight-bold text-danger" role="alert">
+                                    {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label class="form-label">Mahsulot nomi:</label>
+                                <input type="text" name="name" value="{{ product.name }}" maxlength="100" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Narxi (so'mda):</label>
+                                <input type="number" name="price" value="{{ product.price|stringformat:'f' }}" step="0.01" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kategoriya:</label>
+                                <select name="category" class="form-select" required>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}" {% if cat.id == product.category.id %}selected{% endif %}>
+                                            {{ cat.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Mahsulot rasmi (o'zgartirish ixtiyoriy):</label>
+                                {% if product.image %}
+                                    <div class="mb-2 text-muted small">Hozirgi rasm: {{ product.image.name }}</div>
+                                {% endif %}
+                                <input type="file" name="image" class="form-control" accept="image/*">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Tavsif:</label>
+                                <textarea name="descrition" rows="3" class="form-control">{{ product.descrition }}</textarea>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" name="is_available" id="is_available" class="form-check-input" {% if product.is_available %}checked{% endif %}>
+                                <label class="form-check-label" for="is_available">
+                                    Sotuvda mavjud
+                                </label>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-warning text-dark fw-bold">O'zgarishlarni saqlash</button>
+                                <a href="/" class="btn btn-outline-secondary">Bekor qilish</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

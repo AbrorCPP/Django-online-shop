@@ -100,3 +100,39 @@ def product_list(request):
         "products":products
     }
     return render(request, "products.html",product)
+
+def delete_product(request,product_id):
+    product = Product.objects.get(id = product_id)
+    product.delete()
+    return redirect(product_list)
+
+
+def edit_product(request, product_id):
+    product = Product.objects.get(id=product_id)
+    
+    if product.owner != request.user:
+        messages.error(request, "Sizda tahrirlash huquqi yo'q!")
+        return redirect('product_list')
+
+    if request.method == "POST":
+        product.name = request.POST.get('name')
+        product.price = request.POST.get('price')
+        category_id = request.POST.get('category')
+        product.category = Category.objects.get(id=category_id)
+        product.descrition = request.POST.get('descrition')
+        product.is_available = request.POST.get('is_available') == 'on'
+        
+        new_image = request.FILES.get('image')
+        if new_image:
+            product.image = new_image
+            
+        product.save()
+        messages.success(request, "Mahsulot yangilandi!")
+        return redirect('product_list')
+
+    categories = Category.objects.all()
+    return render(request, 'edit_product.html', {
+        'product': product,
+        'categories': categories
+    })
+    
